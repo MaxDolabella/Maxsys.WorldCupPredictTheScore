@@ -1,0 +1,83 @@
+﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
+@model PredictViewModel
+
+@{
+    ViewData["Title"] = "Lista de Palpites";
+    var onKeyPressCode = "return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))";
+}
+
+<h4 class="text-center">@ViewData["Title"]</h4>
+
+<div class="row justify-content-center">
+    <div class="col col-6">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h5 class="accordion-header" id="headingOne">
+                    <button class="accordion-button collapsed text-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Importante!! Click para expandir.
+                    </button>
+                </h5>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <small class="small">
+                            <span class="small">
+                                A lista exibe o próximo jogo (ainda não palpitado nem iniciado) de cada seleção.<br/>
+                                Não é necessário palpitar todos os jogos de uma vez. Os placarem em branco não serão registrados.<br />
+                                Caso deixe o placar de uma das seleções em branco, também não será registrado.<br />
+                            </span>
+                            <span class="text-danger small">
+                                Só é possível palpitar até a hora do início da partida.<br />
+                                Caso a tela seja aberta antes da partida começar, mas o palpite for
+                                enviado após seu início, o palpite será desconsiderado.
+                            </span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    <input hidden asp-for="UserId" />
+
+    @for (int i = 0; i < Model.List.Count(); i++)
+    {
+        var dateISO = Model.List[i].Date.ToString("yyyy-MM-dd HH:mm:ss");
+        var date = Model.List[i].Date.ToString("g");
+
+        <section class="d-flex justify-content-center">
+            <input hidden asp-for="@Model.List[i].MatchId " />
+            <input hidden asp-for="@Model.List[i].Date " />
+            <div class="col-12 score-content">
+                <div class="container text-muted text-center score-text ">
+                    <small><time datetime="@dateISO"><strong>@date</strong></time> | @Model.List[i].MatchInfo</small>
+                </div>
+                <hr class="mt-1" />
+                <div class="row container justify-content-center">
+                    @*<div class="col invisible">Info</div>*@
+                    <div class="col text-end score-text score-team-code"><strong>@Model.List[i].HomeTeam.Code</strong></div>
+                    <div class="col text-end score-text score-team-name"><strong>@Model.List[i].HomeTeam.Name</strong></div>
+                    <div class="col col-auto">
+                        <img class="score" src="img/@Model.List[i].HomeTeam.Flag" title="@Model.List[i].HomeTeam.Name" alt="@Model.List[i].HomeTeam.Code" />
+                        <input type="text" asp-for="@Model.List[i].HomeTeamScore" class="score" maxlength="2" onkeypress="@Html.Raw(onKeyPressCode)" />
+                        <span class="text-muted">X</span>
+                        <input type="text" asp-for="@Model.List[i].AwayTeamScore" class="score" maxlength="2" onkeypress="@Html.Raw(onKeyPressCode)" />
+                        <img class="score" src="img/@Model.List[i].AwayTeam.Flag" title="@Model.List[i].AwayTeam.Name" alt="@Model.List[i].AwayTeam.Code" />
+                    </div>
+                    <div class="col text-start score-text score-team-name"><strong>@Model.List[i].AwayTeam.Name</strong></div>
+                    <div class="col text-start score-text score-team-code"><strong>@Model.List[i].AwayTeam.Code</strong></div>
+                </div>
+            </div>
+        </section>
+    }
+
+    <div class="row justify-content-center m-4">
+        <div class="col col-auto">
+            <input type="submit" value="Registrar Palpites" class="btn btn-primary"/>
+        </div>
+    </div>
+        
+}

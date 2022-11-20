@@ -1,0 +1,93 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+
+
+.score-content {
+    padding: 0.25em;
+    border: 0px solid;
+    border-radius: 1em;
+    background-color: azure;
+    box-shadow: 0 0.25em 0.5em 0 rgba(0,0,0,0.2);
+    min-width: 325px !important;
+    max-width: 700px !important;
+    margin: 0.5em 0;
+}
+
+
+input.score {
+    width: 2em;
+    border-style: none none solid none;
+    border-color: lightgray;
+    border-width: 1px;
+    border-radius: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+    font-size: 1em;
+    font-weight: 600;
+    font-variant: small-caps;
+    background: inherit;
+    text-align: center;
+}
+
+
+img.score {
+    width: 3em;
+    height: 2em;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.75);
+    /* margin: 0.5em 0 0.5em 0; */
+    margin: 0;
+}
+
+.score-text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    /* font-weight: 600; */
+    font-variant: small-caps;
+    padding: 0;
+}
+
+.score-team-code {
+    display: none;
+    visibility: collapse;
+    font-variant: normal !important;
+}
+
+span.score-text {
+    width: 1.5em;
+    display: inline-block;
+}
+
+@media (max-width: 585px) {
+    .score-team-name {
+        display: none;
+        visibility: collapse;
+    }
+
+    .score-team-code {
+        display: contents;
+        visibility: visible;
+    }
+}
+
+
+* {
+    
+    /*border: 0.1em solid black !important;*/
+}
+
+

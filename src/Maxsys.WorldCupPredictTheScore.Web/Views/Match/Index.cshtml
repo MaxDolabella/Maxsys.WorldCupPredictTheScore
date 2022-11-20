@@ -1,0 +1,49 @@
+﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Match;
+@using System.Security.Claims
+@model IEnumerable<MatchViewModel>
+
+@{
+    ViewData["Title"] = "Resultados";
+    var isAdmin = this.User.FindAll(ClaimTypes.Role).Any(claim => claim.Value == "admin");
+}
+
+
+<h4 class="text-center">Lista de jogos/resultados</h4>
+<section class="container">
+
+    @foreach (var item in Model)
+    {
+        var dateISO = item.Date.ToString("yyyy-MM-dd HH:mm:ss");
+        var date = item.Date.ToString("g");
+
+        <section class="d-flex justify-content-center">
+            <div class="col-12 score-content">
+                <div class="container text-muted text-center score-text ">
+                    <small><strong><time datetime="@dateISO">@date</time></strong> | @item.MatchInfo</small>
+                </div>
+                <hr class="mt-1" />
+                <div class="row container justify-content-center">
+                    
+                    <div class="col text-end score-text score-team-code"><strong>@item.HomeTeam.Code</strong></div>
+                    <div class="col text-end score-text score-team-name"><strong>@item.HomeTeam.Name</strong></div>
+                    <div class="col col-auto">
+                        <img class="score" src="img/@item.HomeTeam.Flag" title="@item.HomeTeam.Name" alt="@item.HomeTeam.Code" />
+                        <span class="text-center score-text"><strong>@item.HomeTeamScore</strong></span>
+                        <span class="text-muted">X</span>
+                        <span class="text-center score-text"><strong>@item.AwayTeamScore</strong></span>
+                        <img class="score" src="img/@item.AwayTeam.Flag" title="@item.AwayTeam.Name" alt="@item.AwayTeam.Code" />
+                    </div>
+                    <div class="col text-start score-text score-team-name"><strong>@item.AwayTeam.Name</strong></div>
+                    <div class="col text-start score-text score-team-code"><strong>@item.AwayTeam.Code</strong></div>
+                    <div class="col col-auto text-center">
+                        @if (isAdmin)
+                        {
+                            <a class="btn btn-sm btn-warning" asp-controller="Match" asp-action="Edit" asp-route-matchId="@item.MatchId">Editar</a>
+                        }
+                        <a class="btn btn-sm btn-primary" asp-controller="Predict" asp-action="MatchPredictions" asp-route-matchId="@item.MatchId">Ver Palpites</a>
+                    </div>
+                </div>
+            </div>
+        </section>     
+    }
+</section>

@@ -1,0 +1,67 @@
+﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
+@model MatchPredictionsViewModel
+
+@{
+    ViewData["Title"] = "Palpites do jogo";
+}
+
+<h4 class="text-center">@ViewData["Title"]</h4>
+
+<p class="lead text-center">
+    Palpites dos adversários estarão disponíveis somente após o início da partida.
+</p>
+<section class="container">
+    @{
+        var dateISO = Model.Match.Date.ToString("yyyy-MM-dd HH:mm:ss");
+        var date = Model.Match.Date.ToString("g");
+    }
+
+    <section class="d-flex justify-content-center">
+        <div class="col-12 score-content">
+            <div class="container text-muted text-center score-text ">
+                <small><strong><time datetime="@dateISO">@date</time></strong> | @Model.Match.MatchInfo</small>
+            </div>
+            <hr class="mt-1" />
+            <div class="row container justify-content-center">
+
+                <div class="col text-end score-text score-team-code"><strong>@Model.Match.HomeTeam.Code</strong></div>
+                <div class="col text-end score-text score-team-name"><strong>@Model.Match.HomeTeam.Name</strong></div>
+                <div class="col col-auto">
+                    <img class="score" src="~/img/@Model.Match.HomeTeam.Flag" title="@Model.Match.HomeTeam.Name" alt="@Model.Match.HomeTeam.Code" />
+                    <span class="text-center score-text"><strong>@Model.Match.HomeTeamScore</strong></span>
+                    <span class="text-muted">X</span>
+                    <span class="text-center score-text"><strong>@Model.Match.AwayTeamScore</strong></span>
+                    <img class="score" src="~/img/@Model.Match.AwayTeam.Flag" title="@Model.Match.AwayTeam.Name" alt="@Model.Match.AwayTeam.Code" />
+                </div>
+                <div class="col text-start score-text score-team-name"><strong>@Model.Match.AwayTeam.Name</strong></div>
+                <div class="col text-start score-text score-team-code"><strong>@Model.Match.AwayTeam.Code</strong></div>
+            </div>
+
+            @if (Model.Predictions.Any()) 
+            {
+                @foreach (var item in Model.Predictions)
+                {
+                    <hr class="mt-1" />
+                    <div class="row container justify-content-center">
+                        <div class="col col-auto text-center">
+                            <strong>@item.UserName</strong><br />
+                            <span class="text-center score-text"><strong>@item.HomeTeamScore</strong></span>
+                            <span class="text-muted">X</span>
+                            <span class="text-center score-text"><strong>@item.AwayTeamScore</strong></span>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <hr class="mt-1" />
+                <div class="row container justify-content-center">
+                    Nenhum palpite para esse jogo.
+                </div>
+            }
+
+
+        </div>
+    </section>
+    
+</section>
