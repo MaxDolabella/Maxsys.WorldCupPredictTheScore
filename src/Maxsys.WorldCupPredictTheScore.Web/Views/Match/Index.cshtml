@@ -13,8 +13,8 @@
 
     @foreach (var item in Model)
     {
-        var dateISO = item.Date.ToString("yyyy-MM-dd HH:mm:ss");
-        var date = item.Date.ToString("g");
+        var dateISO = item.Date.GetBRT().ToString("yyyy-MM-dd HH:mm:ss");
+        var date = item.Date.ToStringBRT();
 
         <section class="d-flex justify-content-center">
             <div class="col-12 score-content">

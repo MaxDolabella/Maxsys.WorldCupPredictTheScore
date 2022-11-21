@@ -12,8 +12,8 @@
 </p>
 <section class="container">
     @{
-        var dateISO = Model.Match.Date.ToString("yyyy-MM-dd HH:mm:ss");
-        var date = Model.Match.Date.ToString("g");
+        var dateISO = Model.Match.Date.GetBRT().ToString("yyyy-MM-dd HH:mm:ss");
+        var date = Model.Match.Date.ToStringBRT();
     }
 
     <section class="d-flex justify-content-center">

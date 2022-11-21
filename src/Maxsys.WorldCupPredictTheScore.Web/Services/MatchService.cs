@@ -2,7 +2,6 @@
 using Maxsys.WorldCupPredictTheScore.Web.Data;
 using Maxsys.WorldCupPredictTheScore.Web.Extensions;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
-using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Services;

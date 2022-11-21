@@ -22,7 +22,7 @@ public sealed class PredictService
     public async Task<IEnumerable<PredictListDTO>> GetUserAvailableMatchesToPredictAsync(Guid userId, CancellationToken cancellation = default)
     {
         // Obter data (agora)
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
 
         // Obter id dos jogos palpitados.
         var predictedMatchIds = await _context.Predictions.AsNoTracking()

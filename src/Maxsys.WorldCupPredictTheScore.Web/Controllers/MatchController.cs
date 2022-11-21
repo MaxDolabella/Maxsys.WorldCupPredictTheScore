@@ -23,46 +23,44 @@ public class MatchController : Controller
         _pointsService = pointsService;
     }
 
-
     public async Task<IActionResult> Index(CancellationToken cancellation = default)
     {
         var models = await _matchService.GetAllMatchesAsync(cancellation);
 
         var viewModels = models
             .Select(match => new MatchViewModel
-        {
-            MatchId = match.MatchId,
-            MatchInfo = match.Round switch
             {
-                4 => "Oitavas de final",
-                5 => "Quartas de final",
-                6 => "Semifinal",
-                7 => "Decisão de 3º Lugar",
-                8 => "FINAL",
-                _ => $"Rodada {match.Round} / Grupo {match.Group}"
-            },
-            Date = match.Date,
-            HomeTeam = new TeamViewModel
-            {
-                Name = match.HomeTeam.Name,
-                Code = match.HomeTeam.Code,
-                Flag = $"{match.HomeTeam.Code}.webp",
-            },
-            AwayTeam = new TeamViewModel
-            {
-                Name = match.AwayTeam.Name,
-                Code = match.AwayTeam.Code,
-                Flag = $"{match.AwayTeam.Code}.webp",
-            },
-            HomeTeamScore = match.HomeTeamScore,
-            AwayTeamScore = match.AwayTeamScore,
-            //IsPlayed = (match.HomeTeamScore, match.AwayTeamScore) is not (null, null)
-        })
+                MatchId = match.MatchId,
+                MatchInfo = match.Round switch
+                {
+                    4 => "Oitavas de final",
+                    5 => "Quartas de final",
+                    6 => "Semifinal",
+                    7 => "Decisão de 3º Lugar",
+                    8 => "FINAL",
+                    _ => $"Rodada {match.Round} / Grupo {match.Group}"
+                },
+                Date = match.Date,
+                HomeTeam = new TeamViewModel
+                {
+                    Name = match.HomeTeam.Name,
+                    Code = match.HomeTeam.Code,
+                    Flag = $"{match.HomeTeam.Code}.webp",
+                },
+                AwayTeam = new TeamViewModel
+                {
+                    Name = match.AwayTeam.Name,
+                    Code = match.AwayTeam.Code,
+                    Flag = $"{match.AwayTeam.Code}.webp",
+                },
+                HomeTeamScore = match.HomeTeamScore,
+                AwayTeamScore = match.AwayTeamScore,
+                //IsPlayed = (match.HomeTeamScore, match.AwayTeamScore) is not (null, null)
+            })
             .ToList();
 
         return View(viewModels);
     }
-
 
     [Authorize(Roles = "admin")]
     [Route("editar/{matchId:guid}")]

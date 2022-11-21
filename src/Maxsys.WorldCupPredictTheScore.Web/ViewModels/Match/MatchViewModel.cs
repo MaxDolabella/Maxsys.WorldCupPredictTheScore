@@ -11,7 +11,4 @@ public sealed class MatchViewModel
 
     public byte? HomeTeamScore { get; set; }
     public byte? AwayTeamScore { get; set; }
-
-    public bool IsPlayed { get; set; }
-
 }

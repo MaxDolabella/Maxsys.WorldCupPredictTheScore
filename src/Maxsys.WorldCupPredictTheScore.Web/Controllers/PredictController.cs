@@ -1,4 +1,5 @@
-﻿using Maxsys.WorldCupPredictTheScore.Web.Areas.Identity.Models;
+﻿using System.Security.Claims;
+using Maxsys.WorldCupPredictTheScore.Web.Areas.Identity.Models;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 using Maxsys.WorldCupPredictTheScore.Web.Services;
 using Maxsys.WorldCupPredictTheScore.Web.ViewModels;
@@ -7,7 +8,6 @@ using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 
@@ -73,7 +73,7 @@ public class PredictController : Controller
     public async Task<IActionResult> MatchPredictions(Guid matchId, CancellationToken cancellation = default)
     {
         var userId = GetLoggedUserId();
-        var dateNow = DateTime.Now;
+        var dateNow = DateTime.UtcNow;
 
         var model = await _predictService.GetMatchPredictionsAsync(matchId, userId, dateNow, cancellation);
         if (model is null)
@@ -134,7 +134,7 @@ public class PredictController : Controller
     private IList<PredictScore> GetModelsFromViewModel(PredictViewModel viewModel)
     {
         var userId = GetLoggedUserId();
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
 
         return viewModel.List
             .Where(vm => vm.Date >= now)

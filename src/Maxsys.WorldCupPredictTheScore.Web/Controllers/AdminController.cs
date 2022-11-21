@@ -1,10 +1,10 @@
 ﻿using Maxsys.WorldCupPredictTheScore.Web.Data;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 using Maxsys.WorldCupPredictTheScore.Web.Services;
+using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
@@ -74,36 +74,29 @@ public class AdminController : Controller
 
         return result.IsValid ? RedirectToAction(nameof(RetroativeRegisterPredict)) : BadRequest(result.Errors);
     }
-}
 
-public class UserSelectViewModel
-{
-    public Guid UserId { get; set; }
-    public string UserEmail { get; set; }
-}
 
-public class MatchSelectViewModel
-{
-    public Guid MatchId { get; set; }
-    public string MatchDescription { get; set; }
-}
+    //[Route("atualizar-datas-utc")]
+    //public async ValueTask<IActionResult> UTCDateCorrection()
+    //{
+        
+    //    var matches = await _context.Matches.AsTracking().ToListAsync();
 
-public class PrecitcExtraCreateViewModel
-{
-    public IList<UserSelectViewModel> UsersSelect { get; set; } = new List<UserSelectViewModel>();
-    public IList<MatchSelectViewModel> MatchesSelect { get; set; } = new List<MatchSelectViewModel>();
+    //    try
+    //    {
+    //        foreach (var item in matches)
+    //        {
+    //            item.Date = item.Date.AddHours(3);
+    //        }
 
-    [Required]
-    public Guid? SelectedUserId { get; set; }
-    
-    [Required]
-    public Guid? SelectedMatchId { get; set; }
+    //        await _context.SaveChangesAsync();
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(ex.Message);
+    //    }
 
-    [Required]
-    [Range(0, 20, ErrorMessage = "Campo obrigatório")]
-    public byte? HomeTeamScore { get; set; }
+    //    return Ok("Datas UTC Atualizadas.");
+    //}
 
-    [Required]
-    [Range(0, 20, ErrorMessage = "Campo obrigatório")]
-    public byte? AwayTeamScore { get; set; }
 }
