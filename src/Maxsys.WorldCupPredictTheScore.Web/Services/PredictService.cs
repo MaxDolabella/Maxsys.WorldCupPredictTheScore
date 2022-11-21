@@ -79,7 +79,7 @@ public sealed class PredictService
 
         foreach (var predict in predicts)
         {
-            var exists = await _context.Predictions.AsNoTracking().AnyAsync(p => p.UserId == predict.Id && p.MatchId == predict.MatchId, cancellation);
+            var exists = await _context.Predictions.AsNoTracking().AnyAsync(p => p.UserId == predict.UserId && p.MatchId == predict.MatchId, cancellation);
             if (exists)
                 return validationResult.AddError($"Já existe um palpite deste usuário para o jogo {predict.MatchId}");
 

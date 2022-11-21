@@ -293,7 +293,7 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Predictions_MatchId",
                 table: "Predictions",
-                column: "MatchId");
+                column: "SelectedMatchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Predictions_UserId",

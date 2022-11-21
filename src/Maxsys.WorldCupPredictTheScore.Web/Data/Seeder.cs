@@ -163,24 +163,24 @@ public static class Seeder
             result = await userManager.AddToRoleAsync(adminUser, adminRole.Name);
         }
 
-        //if (((WebApplication)host).Environment.IsDevelopment())
-        //{
-        //    for (int i = 0; i < 3; i++)
-        //    {
-        //        var user = new AppUser()
-        //        {
-        //            Email = $"User@{i}",
-        //            EmailConfirmed = true
-        //        };
+        if (((WebApplication)host).Environment.IsDevelopment())
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var user = new AppUser()
+                {
+                    Email = $"User@{i}",
+                    EmailConfirmed = true
+                };
 
-        //        if ((await userManager.FindByEmailAsync(user.Email)) is null)
-        //        {
-        //            await userStore.SetUserNameAsync(user, user.Email, CancellationToken.None);
-        //            //await emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
-        //            result = await userManager.CreateAsync(user, $"User@{i}");
-        //            result = await userManager.AddToRoleAsync(user, userRole.Name);
-        //        }
-        //    }
-        //}
+                if ((await userManager.FindByEmailAsync(user.Email)) is null)
+                {
+                    await userStore.SetUserNameAsync(user, user.Email, CancellationToken.None);
+                    //await emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
+                    result = await userManager.CreateAsync(user, $"User@{i}");
+                    result = await userManager.AddToRoleAsync(user, userRole.Name);
+                }
+            }
+        }
     }
 }

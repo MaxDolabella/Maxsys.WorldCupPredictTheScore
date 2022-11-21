@@ -178,7 +178,7 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Migrations
                     b.Property<byte>("HomeTeamScore")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("MatchId")
+                    b.Property<Guid>("SelectedMatchId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserId")
@@ -186,7 +186,7 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MatchId");
+                    b.HasIndex("SelectedMatchId");
 
                     b.HasIndex("UserId");
 
@@ -349,7 +349,7 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Migrations
                 {
                     b.HasOne("Maxsys.WorldCupPredictTheScore.Web.Models.Entities.Match", "Match")
                         .WithMany()
-                        .HasForeignKey("MatchId")
+                        .HasForeignKey("SelectedMatchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
