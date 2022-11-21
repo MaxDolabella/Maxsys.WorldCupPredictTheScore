@@ -56,7 +56,7 @@ app.MapRazorPages();
 
 await Seeder.CreateAsync(app);
 await Seeder.SeedAsync(app);
-await Seeder.SeedRoles(app);
+await Seeder.SeedRoles(app, addTestUsers:false);
 app.Run();
 
 

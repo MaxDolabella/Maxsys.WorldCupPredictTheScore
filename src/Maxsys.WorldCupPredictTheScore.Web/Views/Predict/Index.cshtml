@@ -21,14 +21,15 @@
                     <div class="accordion-body">
                         <small class="small">
                             <span class="small">
-                                A lista exibe o próximo jogo (ainda não palpitado nem iniciado) de cada seleção.<br/>
+                                A lista exibe o <strong>próximo jogo ainda não palpitado nem iniciado</strong> de cada seleção.<br />
                                 Não é necessário palpitar todos os jogos de uma vez. Os placarem em branco não serão registrados.<br />
                                 Caso deixe o placar de uma das seleções em branco, também não será registrado.<br />
                             </span>
                             <span class="text-danger small">
                                 Só é possível palpitar até a hora do início da partida.<br />
                                 Caso a tela seja aberta antes da partida começar, mas o palpite for
-                                enviado após seu início, o palpite será desconsiderado.
+                                enviado após seu início, o palpite será desconsiderado.<br/>
+                                <strong>Não é possível editar um palpite enviado.</strong>
                             </span>
                         </small>
                     </div>
@@ -74,10 +75,21 @@
         </section>
     }
 
+    @if (Model is null || !Model.List.Any())
+    {
+        <div class="row justify-content-center m-4">
+            <div class="col col-auto">
+                <p class="display-6">Não há jogos disponíveis para palpitar. Volte mais tarde.</p>
+            </div>
+        </div>
+    }
+    else
+    {
     <div class="row justify-content-center m-4">
         <div class="col col-auto">
             <input type="submit" value="Registrar Palpites" class="btn btn-primary"/>
         </div>
     </div>
+    }
         
 }

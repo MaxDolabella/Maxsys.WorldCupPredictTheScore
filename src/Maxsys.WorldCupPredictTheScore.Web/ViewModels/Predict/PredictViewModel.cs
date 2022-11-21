@@ -3,7 +3,7 @@
 public sealed class PredictViewModel
 {
     public Guid UserId { get; set; }
-    public IList<PredictListViewModel> List { get; set; }
+    public IList<PredictListViewModel> List { get; set; } = new List<PredictListViewModel>();
 
 }
 

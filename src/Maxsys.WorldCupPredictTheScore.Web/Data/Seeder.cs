@@ -127,7 +127,7 @@ public static class Seeder
         await context.SaveChangesAsync();
     }
 
-    public static async ValueTask SeedRoles(IHost host)
+    public static async ValueTask SeedRoles(IHost host, bool addTestUsers = false)
     {
         var adminRole = new AppRole("admin");
         var userRole = new AppRole("user");
@@ -163,7 +163,7 @@ public static class Seeder
             result = await userManager.AddToRoleAsync(adminUser, adminRole.Name);
         }
 
-        if (((WebApplication)host).Environment.IsDevelopment())
+        if (addTestUsers/*((WebApplication)host).Environment.IsDevelopment()*/)
         {
             for (int i = 0; i < 3; i++)
             {
