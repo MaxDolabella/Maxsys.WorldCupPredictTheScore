@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 
-[Authorize(Roles = "user")]
+[Authorize(Roles = "admin,user")]
 [Route("palpites")]
 public class PredictController : Controller
 {
@@ -24,6 +24,7 @@ public class PredictController : Controller
         _userManager = userManager;
     }
 
+    [Authorize(Roles = "user")]
     public async Task<IActionResult> Index(CancellationToken cancellation = default)
     {
         var userId = GetLoggedUserId();
@@ -58,6 +59,7 @@ public class PredictController : Controller
         return View(viewModel);
     }
 
+    [Authorize(Roles = "user")]
     [HttpPost]
     public async Task<IActionResult> Index(PredictViewModel viewModel, CancellationToken cancellation = default)
     {
@@ -118,6 +120,8 @@ public class PredictController : Controller
                 })
                 .ToList()
         };
+
+        var resultPoints = 
 
         return View(viewModel);
     }

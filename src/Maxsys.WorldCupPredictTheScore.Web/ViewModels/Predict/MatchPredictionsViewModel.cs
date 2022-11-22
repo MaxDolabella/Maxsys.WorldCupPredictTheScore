@@ -13,4 +13,5 @@ public sealed class PredictedScoreViewModel
     public string UserName { get; set; }
     public byte HomeTeamScore { get; set; }
     public byte AwayTeamScore { get; set; }
+    public byte? Points { get; set; } = null;
 }

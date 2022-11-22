@@ -42,12 +42,16 @@
                 @foreach (var item in Model.Predictions)
                 {
                     <hr class="mt-1" />
-                    <div class="row container justify-content-center">
+                    <div class="row container justify-content-center" style="position: relative;">
                         <div class="col col-auto text-center">
                             <strong>@item.UserName</strong><br />
                             <span class="text-center score-text"><strong>@item.HomeTeamScore</strong></span>
                             <span class="text-muted">X</span>
                             <span class="text-center score-text"><strong>@item.AwayTeamScore</strong></span>
+                        </div>
+                        <!-- div row: style="position: relative;"  -->
+                        <div style="display: block; position: absolute; height: 100%; width:100%; text-align:right; vertical-align: middle; ">
+                            xx pontos
                         </div>
                     </div>
                 }
