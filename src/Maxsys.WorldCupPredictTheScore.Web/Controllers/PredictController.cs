@@ -121,7 +121,6 @@ public class PredictController : Controller
                 .ToList()
         };
 
-        var resultPoints = 
 
         return View(viewModel);
     }
