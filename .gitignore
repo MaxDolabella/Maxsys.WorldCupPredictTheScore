@@ -355,3 +355,5 @@ MigrationBackup/
 *appsettings.json
 
 *.db
+*.db-shm
+*.db-wal
