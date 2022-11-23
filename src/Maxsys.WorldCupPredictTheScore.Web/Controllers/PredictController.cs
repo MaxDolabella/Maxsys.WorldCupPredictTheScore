@@ -15,13 +15,15 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 [Route("palpites")]
 public class PredictController : Controller
 {
-    private readonly PredictService _predictService;
+    private readonly PredictionService _predictService;
+    private readonly ResultPointsService _resultPointsService;
     private readonly UserManager<AppUser> _userManager;
 
-    public PredictController(PredictService predictService, UserManager<AppUser> userManager)
+    public PredictController(PredictionService predictService, ResultPointsService resultPointsService, UserManager<AppUser> userManager)
     {
         _predictService = predictService;
         _userManager = userManager;
+        _resultPointsService = resultPointsService;
     }
 
     [Authorize(Roles = "user")]
@@ -81,46 +83,58 @@ public class PredictController : Controller
         if (model is null)
             return NotFound();
 
+        var match = model.Match;
+        var notPlayedMatch = match.Date > dateNow; // não visualizar palpites de adversários onde a partida não começou
         var viewModel = new MatchPredictionsViewModel
         {
             Match = new MatchViewModel
             {
-                MatchId = model.Match.MatchId,
-                MatchInfo = model.Match.Round switch
+                MatchId = match.MatchId,
+                MatchInfo = match.Round switch
                 {
                     4 => "Oitavas de final",
                     5 => "Quartas de final",
                     6 => "Semifinal",
                     7 => "Decisão de 3º Lugar",
                     8 => "FINAL",
-                    _ => $"Rodada {model.Match.Round} / Grupo {model.Match.Group}"
+                    _ => $"Rodada {match.Round} / Grupo {match.Group}"
                 },
-                Date = model.Match.Date,
+                Date = match.Date,
                 HomeTeam = new TeamViewModel
                 {
-                    Name = model.Match.HomeTeam.Name,
-                    Code = model.Match.HomeTeam.Code,
-                    Flag = $"{model.Match.HomeTeam.Code}.webp",
+                    Name = match.HomeTeam.Name,
+                    Code = match.HomeTeam.Code,
+                    Flag = $"{match.HomeTeam.Code}.webp",
                 },
                 AwayTeam = new TeamViewModel
                 {
-                    Name = model.Match.AwayTeam.Name,
-                    Code = model.Match.AwayTeam.Code,
-                    Flag = $"{model.Match.AwayTeam.Code}.webp",
+                    Name = match.AwayTeam.Name,
+                    Code = match.AwayTeam.Code,
+                    Flag = $"{match.AwayTeam.Code}.webp",
                 },
-                HomeTeamScore = model.Match.HomeTeamScore,
-                AwayTeamScore = model.Match.AwayTeamScore
+                HomeTeamScore = match.HomeTeamScore,
+                AwayTeamScore = match.AwayTeamScore
             },
             Predictions = model.Predictions
-                .Select(p => new PredictedScoreViewModel
+                .Select(predictedScore => new PredictedScoreViewModel
                 {
-                    UserName = p.UserName.Substring(0, p.UserName.IndexOf('@')),
-                    HomeTeamScore = p.HomeTeamScore,
-                    AwayTeamScore = p.AwayTeamScore
+                    UserId = predictedScore.UserId,
+                    UserName = predictedScore.UserName[..predictedScore.UserName.IndexOf('@')],
+                    HomeTeamScore = notPlayedMatch && predictedScore.UserId != userId ? "?" : predictedScore.HomeTeamScore.ToString(),
+                    AwayTeamScore = notPlayedMatch && predictedScore.UserId != userId ? "?" : predictedScore.AwayTeamScore.ToString()
                 })
                 .ToList()
         };
 
+        // Obter pontos da partida
+        var matchResults = await _resultPointsService.GetPointsByMatchAsync(matchId, cancellation);
+        // caso tenha pontos (partida em andamento ou finalizada) exibir
+        foreach (var predictionScore in viewModel.Predictions)
+        {
+            var resultPoints = matchResults.SingleOrDefault(points => points.UserId == predictionScore.UserId);
+            if (resultPoints is not null)
+                predictionScore.Points = resultPoints.Points;
+        }
 
         return View(viewModel);
     }

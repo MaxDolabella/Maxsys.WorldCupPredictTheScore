@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Services;
 
-public sealed class PredictService
+public sealed class PredictionService
 {
     private readonly ApplicationDbContext _context;
 
-    public PredictService(ApplicationDbContext context)
+    public PredictionService(ApplicationDbContext context)
     {
         _context = context;
     }
@@ -114,15 +114,16 @@ public sealed class PredictService
         var query = _context.Predictions.AsNoTracking()
             .Where(p => p.MatchId == matchId);
 
-        // não visualizar palpites de adversários onde a partida não começou
-        if (match.Date > date)
-            query = query.Where(p => p.UserId == userId);
+        //// não visualizar palpites de adversários onde a partida não começou
+        //if (match.Date > date)
+        //    query = query.Where(p => p.UserId == userId);
 
         var predictions = await query
             .OrderBy(p => p.User.UserName)
             .Select(p => new PredictedScoreDTO
             {
                 PredictionId = p.Id,
+                UserId = p.UserId,
                 UserName = p.User.UserName,
                 HomeTeamScore = p.HomeTeamScore,
                 AwayTeamScore = p.AwayTeamScore

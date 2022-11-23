@@ -1,11 +1,11 @@
-﻿using Maxsys.WorldCupPredictTheScore.Web.Data;
+﻿using System.Data;
+using Maxsys.WorldCupPredictTheScore.Web.Data;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 using Maxsys.WorldCupPredictTheScore.Web.Services;
 using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 
@@ -14,9 +14,9 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 public class AdminController : Controller
 {
     private readonly ApplicationDbContext _context;
-    private readonly PredictService _predictService;
+    private readonly PredictionService _predictService;
 
-    public AdminController(ApplicationDbContext context, PredictService predictService)
+    public AdminController(ApplicationDbContext context, PredictionService predictService)
     {
         _context = context;
         _predictService = predictService;
@@ -57,10 +57,14 @@ public class AdminController : Controller
     [Route("adicionar-palpite-retroativo")]
     public async ValueTask<IActionResult> RetroativeRegisterPredict(PrecitcExtraCreateViewModel viewModel, CancellationToken cancellation = default)
     {
-        if (viewModel.SelectedUserId is null) ModelState.AddModelError("SelectedUserId", "Selecione um usuário.");
-        if (viewModel.SelectedMatchId is null) ModelState.AddModelError("SelectedMatchId", "Selecione uma partida.");
-        if (viewModel.HomeTeamScore is null) ModelState.AddModelError("HomeTeamScore", "Placar obrigatório.");
-        if (viewModel.AwayTeamScore is null) ModelState.AddModelError("AwayTeamScore", "Placar obrigatório.");
+        if (viewModel.SelectedUserId is null)
+            ModelState.AddModelError("SelectedUserId", "Selecione um usuário.");
+        if (viewModel.SelectedMatchId is null)
+            ModelState.AddModelError("SelectedMatchId", "Selecione uma partida.");
+        if (viewModel.HomeTeamScore is null)
+            ModelState.AddModelError("HomeTeamScore", "Placar obrigatório.");
+        if (viewModel.AwayTeamScore is null)
+            ModelState.AddModelError("AwayTeamScore", "Placar obrigatório.");
 
         if (!ModelState.IsValid)
         {
@@ -75,11 +79,9 @@ public class AdminController : Controller
         return result.IsValid ? RedirectToAction(nameof(RetroativeRegisterPredict)) : BadRequest(result.Errors);
     }
 
-
     //[Route("atualizar-datas-utc")]
     //public async ValueTask<IActionResult> UTCDateCorrection()
     //{
-        
     //    var matches = await _context.Matches.AsTracking().ToListAsync();
 
     //    try
@@ -98,5 +100,4 @@ public class AdminController : Controller
 
     //    return Ok("Datas UTC Atualizadas.");
     //}
-
 }

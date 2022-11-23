@@ -16,8 +16,8 @@ public sealed class PredictScore : Entity
         AwayTeamScore = awayScore;
     }
 
-    protected PredictScore() { }
-
+    protected PredictScore()
+    { }
 
     public Guid MatchId { get; set; }
     public Guid UserId { get; set; }
@@ -37,4 +37,3 @@ public sealed class PredictScore : Entity
                 : MatchWinner.Draw;
     }
 }
-

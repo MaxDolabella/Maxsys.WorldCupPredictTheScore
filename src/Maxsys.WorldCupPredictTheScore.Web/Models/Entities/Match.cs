@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
+﻿namespace Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 
 public sealed class Match : Entity
 {
@@ -29,8 +27,6 @@ public sealed class Match : Entity
 
     public byte? HomeScore { get; set; }
     public byte? AwayScore { get; set; }
-
- 
 
     public MatchWinner? GetWinner()
     {

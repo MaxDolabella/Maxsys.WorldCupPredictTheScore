@@ -16,9 +16,10 @@ builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireCo
     .AddRoles<AppRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<PredictService>();
+builder.Services.AddScoped<PredictionService>();
 builder.Services.AddScoped<MatchService>();
 builder.Services.AddScoped<PointsService>();
+builder.Services.AddScoped<ResultPointsService>();
 
 builder.Services.AddControllersWithViews();
 

@@ -50,9 +50,12 @@
                             <span class="text-center score-text"><strong>@item.AwayTeamScore</strong></span>
                         </div>
                         <!-- div row: style="position: relative;"  -->
+                        @if (item.Points is not null)
+                        {
                         <div style="display: block; position: absolute; height: 100%; width:100%; text-align:right; vertical-align: middle; ">
-                            xx pontos
+                            @item.Points Pontos
                         </div>
+                        } 
                     </div>
                 }
             }

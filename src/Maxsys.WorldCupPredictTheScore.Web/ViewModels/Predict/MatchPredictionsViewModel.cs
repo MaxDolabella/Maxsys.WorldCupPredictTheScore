@@ -10,8 +10,9 @@ public sealed class MatchPredictionsViewModel
 
 public sealed class PredictedScoreViewModel
 {
+    public Guid UserId { get; set; }
     public string UserName { get; set; }
-    public byte HomeTeamScore { get; set; }
-    public byte AwayTeamScore { get; set; }
-    public byte? Points { get; set; } = null;
+    public string HomeTeamScore { get; set; }
+    public string AwayTeamScore { get; set; }
+    public int? Points { get; set; } = null;
 }

@@ -1,10 +1,10 @@
-﻿using Maxsys.WorldCupPredictTheScore.Web.Areas.Identity.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using Maxsys.WorldCupPredictTheScore.Web.Areas.Identity.Models;
 using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Role;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 

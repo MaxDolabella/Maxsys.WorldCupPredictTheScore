@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Maxsys.WorldCupPredictTheScore.Web.Models;
-using Maxsys.WorldCupPredictTheScore.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
+
 public class HomeController : Controller
 {
     public IActionResult Index()
