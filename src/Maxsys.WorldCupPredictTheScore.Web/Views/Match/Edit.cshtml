@@ -19,13 +19,15 @@
             <input asp-for="AwayTeamName" type="hidden" />
 
             <div class="row container justify-content-center score-content">
+                <div class="col text-end score-text score-team-code"><strong>@Model.HomeTeamName</strong></div>
                 <div class="col text-end score-text score-team-name"><strong>@Model.HomeTeamName</strong></div>
                 <div class="col col-auto">
-                    <input type="text" asp-for="HomeTeamScore" class="score" maxlength="2" onkeypress="@Html.Raw(onKeyPressCode)" />
+                    <input type="number" asp-for="HomeTeamScore" class="score" maxlength="2" min="0" max="15" onkeypress="@Html.Raw(onKeyPressCode)" />
                     <span class="text-muted">X</span>
-                    <input type="text" asp-for="AwayTeamScore" class="score" maxlength="2" onkeypress="@Html.Raw(onKeyPressCode)" />
+                    <input type="number" asp-for="AwayTeamScore" class="score" maxlength="2" min="0" max="15" onkeypress="@Html.Raw(onKeyPressCode)" />
                 </div>
                 <div class="col text-start score-text score-team-name"><strong>@Model.AwayTeamName</strong></div>
+                <div class="col text-start score-text score-team-code"><strong>@Model.AwayTeamName</strong></div>
             </div>
 
             <div class="form-group">
