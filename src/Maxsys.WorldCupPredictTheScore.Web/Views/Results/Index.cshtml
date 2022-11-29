@@ -4,27 +4,31 @@
 
 @{
     ViewData["Title"] = "Classificação";
+    var leaderPoints = Model.Select(_ => _.Points).Max();
     var rnk = 0;
 }
 
 <h4 class="text-center">@ViewData["Title"]</h4>
 
-<table class="table">
+<table class="table table-responsive">
     <thead>
         <tr>
             <th>#</th>
             <th>Participante</th>
             <th>Total Pontos</th>
+            <th>Dif.</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
             rnk++;
+            var dif = rnk == 1 ? "" : $"{item.Points - leaderPoints}";
             <tr>
             <td>@{@rnk}º</td>
             <td>@Html.DisplayFor(modelItem => item.UserName)</td>
             <td>@Html.DisplayFor(modelItem => item.Points)</td>
+            <td>@dif</td>
             <td>
                 @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })*@
             </td>
