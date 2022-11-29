@@ -23,8 +23,8 @@
             <div class="container text-muted text-center score-text ">
                 <small><strong><time datetime="@dateISO">@date</time></strong> | @Model.Match.MatchInfo</small>
                 <br/>
-                <a class="btn btn-sm btn-secondary @Html.Raw(previousMatchDisabled)" href="@Model.PreviousMatchId" >Anterior</a>
-                <a class="btn btn-sm btn-secondary @Html.Raw(nextMatchDisabled)" href="@Model.NextMatchId" >Próximo</a>
+                <a class="btn btn-sm btn-primary @Html.Raw(previousMatchDisabled)" href="@Model.PreviousMatchId" >Anterior</a>
+                <a class="btn btn-sm btn-primary @Html.Raw(nextMatchDisabled)" href="@Model.NextMatchId">Próximo</a>
             </div>
             <hr class="mt-1" />
             <div class="row container justify-content-center">
@@ -57,8 +57,9 @@
                         <!-- div row: style="position: relative;"  -->
                         @if (item.Points is not null)
                         {
+                            var textColor = item.Points == 25 ? "bg-success" : item.Points == 4 ? "bg-secondary text-warning" : "bg-secondary";
                         <div style="display: block; position: absolute; height: 100%; width:100%; text-align:right; vertical-align: middle; ">
-                            @item.Points Pontos
+                            <span class="badge @textColor">@item.Points Pontos</span>
                         </div>
                         } 
                     </div>
