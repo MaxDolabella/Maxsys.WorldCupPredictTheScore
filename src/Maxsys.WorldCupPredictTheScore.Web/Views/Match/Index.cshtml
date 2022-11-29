@@ -4,9 +4,17 @@
 
 @{
     ViewData["Title"] = "Resultados";
+
+    var now = DateTime.UtcNow;
     var isAdmin = this.User.FindAll(ClaimTypes.Role).Any(claim => claim.Value == "admin");
+
+    var currentMatchId = Model.Where(m => m.Date.AddHours(2) >= now).FirstOrDefault()?.MatchId;
+
 }
 
+<script>
+    window.location.hash = "#@currentMatchId?.ToString().Replace("-", "")";
+</script>
 
 <h4 class="text-center">Lista de jogos/resultados</h4>
 <section class="container">
@@ -16,6 +24,7 @@
         var dateISO = item.Date.GetBRT().ToString("yyyy-MM-dd HH:mm:ss");
         var date = item.Date.ToStringBRT();
 
+        <a id="@item.MatchId.ToString().Replace("-", "")"></a>
         <section class="d-flex justify-content-center">
             <div class="col-12 score-content">
                 <div class="container text-muted text-center score-text ">
