@@ -100,7 +100,15 @@ public sealed class PredictionService
         return validationResult;
     }
 
-    public async Task<MatchPredictionsDTO?> GetMatchPredictionsAsync(Guid matchId, Guid userId, DateTime date, CancellationToken cancellation = default)
+    public async Task<IReadOnlyList<Guid>> GetMatchesIdsAsync(CancellationToken cancellation = default)
+    {
+        return await _context.Matches.AsNoTracking()
+            .OrderBy(match=> match.Date)
+            .Select(match => match.Id)
+            .ToListAsync(cancellation);
+    }
+
+    public async Task<MatchPredictionsDTO?> GetMatchPredictionsAsync(Guid matchId, CancellationToken cancellation = default)
     {
         var match = await _context.Matches.AsNoTracking()
             .SelectMatch()
@@ -113,10 +121,6 @@ public sealed class PredictionService
 
         var query = _context.Predictions.AsNoTracking()
             .Where(p => p.MatchId == matchId);
-
-        //// não visualizar palpites de adversários onde a partida não começou
-        //if (match.Date > date)
-        //    query = query.Where(p => p.UserId == userId);
 
         var predictions = await query
             .OrderBy(p => p.User.UserName)

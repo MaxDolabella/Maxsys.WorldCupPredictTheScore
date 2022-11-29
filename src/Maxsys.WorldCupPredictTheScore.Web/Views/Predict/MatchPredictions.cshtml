@@ -3,6 +3,8 @@
 
 @{
     ViewData["Title"] = "Palpites do jogo";
+    var previousMatchDisabled = Model.PreviousMatchId is null ? "disabled" : string.Empty;
+    var nextMatchDisabled = Model.NextMatchId is null ? "disabled" : string.Empty;
 }
 
 <h4 class="text-center">@ViewData["Title"]</h4>
@@ -20,6 +22,9 @@
         <div class="col-12 score-content">
             <div class="container text-muted text-center score-text ">
                 <small><strong><time datetime="@dateISO">@date</time></strong> | @Model.Match.MatchInfo</small>
+                <br/>
+                <a class="btn btn-sm btn-secondary @Html.Raw(previousMatchDisabled)" href="@Model.PreviousMatchId" >Anterior</a>
+                <a class="btn btn-sm btn-secondary @Html.Raw(nextMatchDisabled)" href="@Model.NextMatchId" >Próximo</a>
             </div>
             <hr class="mt-1" />
             <div class="row container justify-content-center">
