@@ -79,14 +79,21 @@ public class PredictController : Controller
         var userId = GetLoggedUserId();
         var dateNow = DateTime.UtcNow;
 
-        var model = await _predictService.GetMatchPredictionsAsync(matchId, userId, dateNow, cancellation);
+        var model = await _predictService.GetMatchPredictionsAsync(matchId, cancellation);
         if (model is null)
             return NotFound();
+
+        var matchesIds = await _predictService.GetMatchesIdsAsync(cancellation);
+        var currentIndex = matchesIds.ToList().IndexOf(matchId);
+        var previousMatchId = currentIndex > 0 ? matchesIds[currentIndex - 1] : default(Guid?);
+        var nextMatchId = currentIndex < matchesIds.Count - 1 ? matchesIds[currentIndex + 1] : default(Guid?);
 
         var match = model.Match;
         var notPlayedMatch = match.Date > dateNow; // não visualizar palpites de adversários onde a partida não começou
         var viewModel = new MatchPredictionsViewModel
         {
+            NextMatchId = nextMatchId,
+            PreviousMatchId = previousMatchId,
             Match = new MatchViewModel
             {
                 MatchId = match.MatchId,
