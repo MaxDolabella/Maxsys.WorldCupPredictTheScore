@@ -61,6 +61,11 @@ img.score {
     padding: 0;
 }
 
+.title-text {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-variant: small-caps;
+}
+
 .score-team-code {
     display: none;
     visibility: collapse;
