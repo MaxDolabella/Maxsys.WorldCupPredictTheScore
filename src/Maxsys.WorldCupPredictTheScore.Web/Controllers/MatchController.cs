@@ -14,12 +14,14 @@ public class MatchController : Controller
 {
     private readonly ILogger _logger;
     private readonly MatchService _matchService;
+    private readonly TeamService _teamService;
     private readonly PointsService _pointsService;
 
-    public MatchController(ILogger<MatchController> logger, MatchService matchService, PointsService pointsService)
+    public MatchController(ILogger<MatchController> logger, MatchService matchService, TeamService teamService, PointsService pointsService)
     {
         _logger = logger;
         _matchService = matchService;
+        _teamService = teamService;
         _pointsService = pointsService;
     }
 
@@ -31,6 +33,7 @@ public class MatchController : Controller
             .Select(match => new MatchViewModel
             {
                 MatchId = match.MatchId,
+                Round = match.Round,
                 MatchInfo = match.Round switch
                 {
                     4 => "Oitavas de final",
@@ -43,12 +46,14 @@ public class MatchController : Controller
                 Date = match.Date,
                 HomeTeam = new TeamViewModel
                 {
+                    Id = match.HomeTeam.Id,
                     Name = match.HomeTeam.Name,
                     Code = match.HomeTeam.Code,
                     Flag = $"{match.HomeTeam.Code}.webp",
                 },
                 AwayTeam = new TeamViewModel
                 {
+                    Id = match.AwayTeam.Id,
                     Name = match.AwayTeam.Name,
                     Code = match.AwayTeam.Code,
                     Flag = $"{match.AwayTeam.Code}.webp",
@@ -107,4 +112,69 @@ public class MatchController : Controller
 
         return RedirectToAction("Index");
     }
+
+
+    [HttpGet]
+    [Authorize(Roles = "admin")]
+    [Route("create")]
+    public async ValueTask<IActionResult> Create(CancellationToken cancellation = default)
+    {
+        var teams = await GetTeamViewModelsAsync(cancellation);
+
+        var viewModel = new MatchCreateViewModel
+        {
+            Teams = teams,
+
+            MatchDate = null,
+            SelectedHomeTeamId = null,
+            SelectedAwayTeamId = null
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "admin")]
+    [Route("create")]
+    public async ValueTask<IActionResult> Create(MatchCreateViewModel viewModel, CancellationToken cancellation = default)
+    {
+        if (!ModelState.IsValid)
+        {
+            viewModel.Teams = await GetTeamViewModelsAsync(cancellation);
+            return View(viewModel);
+        }
+
+        var model = new MatchCreateDTO
+        {
+            Date = viewModel.MatchDate!.Value,
+            Group = viewModel.Group ?? ' ',
+            Round = viewModel.SelectedRound!.Value,
+            HomeTeamId = viewModel.SelectedHomeTeamId!.Value,
+            AwayTeamId = viewModel.SelectedAwayTeamId!.Value
+        };
+
+        var result = await _matchService.AddMatchAsync(model, cancellation);
+        if (!result.IsValid)
+        {
+            result.AddToModelState(ModelState, null);
+            viewModel.Teams = await GetTeamViewModelsAsync(cancellation);
+            return View(viewModel);
+        }
+
+        return RedirectToAction("Index");
+    }
+
+    private async Task<IReadOnlyList<TeamViewModel>> GetTeamViewModelsAsync(CancellationToken cancellation)
+    {
+        var teams = await _teamService.GetAllTeamsAsync(cancellation);
+
+        return teams.Select(team => new TeamViewModel
+        {
+            Id = team.Id,
+            Name = team.Name,
+            Code = team.Code,
+            Flag = $"{team.Code}.webp",
+        }).ToList();
+    }
+    
 }

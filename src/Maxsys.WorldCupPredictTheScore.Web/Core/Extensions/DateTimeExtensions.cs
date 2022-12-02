@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace System;
+namespace Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
 
 public static class DateTimeExtensions
 {

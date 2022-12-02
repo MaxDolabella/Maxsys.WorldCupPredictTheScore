@@ -7,8 +7,8 @@ public sealed class MatchDTO
     public char Group { get; set; }
     public byte Round { get; set; }
 
-    public TeamInfoDTO HomeTeam { get; set; }
-    public TeamInfoDTO AwayTeam { get; set; }
+    public TeamDTO HomeTeam { get; set; }
+    public TeamDTO AwayTeam { get; set; }
 
     public byte? HomeTeamScore { get; set; }
     public byte? AwayTeamScore { get; set; }

@@ -1,4 +1,5 @@
 ﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
+@using Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
 @model PredictViewModel
 
 @{
@@ -48,12 +49,21 @@
     {
         var dateISO = Model.List[i].Date.GetBRT().ToString("yyyy-MM-dd HH:mm:ss");
         var date = Model.List[i].Date.ToStringBRT();
+        var bgColor = Model.List[i].Round switch
+        {
+            4 => "bg-oitavas",
+            5 => "bg-quartas",
+            6 => "bg-semis",
+            7 or 8 => "bg-finais",
+            _ => "bg-azure"
+        };
+
 
         <section class="d-flex justify-content-center">
             <input hidden asp-for="@Model.List[i].MatchId " />
             <input hidden asp-for="@Model.List[i].Date " />
-            <div class="col-12 score-content">
-                <div class="container text-muted text-center score-text ">
+            <div class="col-12 score-content @Html.Raw(bgColor)">
+                <div class="container text-muted text-center score-text">
                     <small><time datetime="@dateISO"><strong>@date</strong></time> | @Model.List[i].MatchInfo</small>
                 </div>
                 <hr class="mt-1" />

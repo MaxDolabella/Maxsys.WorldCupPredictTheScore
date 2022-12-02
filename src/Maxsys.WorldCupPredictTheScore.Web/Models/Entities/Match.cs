@@ -6,14 +6,24 @@ public sealed class Match : Entity
     { }
 
     public Match(char group, byte round, DateTime date, Team homeTeam, Team awayTeam)
+        : this(group, round, date, homeTeam.Id, awayTeam.Id)
+    {
+        HomeTeam = homeTeam;
+        AwayTeam = awayTeam;
+    }
+
+    public Match(char group, byte round, DateTime date, Guid homeTeamId, Guid awayTeamId)
         : base(Guid.NewGuid())
     {
         Group = group;
         Round = round;
         Date = date;
-        HomeTeam = homeTeam;
-        AwayTeam = awayTeam;
+        HomeTeamId = homeTeamId;
+        AwayTeamId = awayTeamId;
+        HomeScore = null;
+        AwayScore = null;
     }
+
 
     public Guid HomeTeamId { get; set; }
     public Guid AwayTeamId { get; set; }

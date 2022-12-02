@@ -10,6 +10,7 @@ public sealed class PredictViewModel
 public sealed class PredictListViewModel
 {
     public Guid MatchId { get; set; }
+    public byte Round { get; set; }
     public string MatchInfo { get; set; }
     public DateTime Date { get; set; }
     public TeamViewModel HomeTeam { get; set; }

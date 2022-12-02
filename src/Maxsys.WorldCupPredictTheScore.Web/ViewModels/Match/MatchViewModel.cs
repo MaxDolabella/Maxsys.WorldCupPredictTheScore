@@ -3,6 +3,7 @@
 public sealed class MatchViewModel
 {
     public Guid MatchId { get; set; }
+    public byte Round { get; set; }
     public string MatchInfo { get; set; }
     public DateTime Date { get; set; }
 

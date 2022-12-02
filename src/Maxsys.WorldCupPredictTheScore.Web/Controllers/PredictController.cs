@@ -40,22 +40,25 @@ public class PredictController : Controller
             {
                 MatchId = predictMatch.MatchId,
                 MatchInfo = predictMatch.MatchInfo,
+                Round = predictMatch.Round,
                 Date = predictMatch.Date,
                 HomeTeam = new TeamViewModel
                 {
+                    Id = predictMatch.HomeTeam.Id,
                     Name = predictMatch.HomeTeam.Name,
                     Code = predictMatch.HomeTeam.Code,
                     Flag = $"{predictMatch.HomeTeam.Code}.webp"
                 },
                 AwayTeam = new TeamViewModel
                 {
+                    Id = predictMatch.AwayTeam.Id,
                     Name = predictMatch.AwayTeam.Name,
                     Code = predictMatch.AwayTeam.Code,
                     Flag = $"{predictMatch.AwayTeam.Code}.webp"
                 },
                 HomeTeamScore = null,
                 AwayTeamScore = null
-            }).ToList()
+            }).OrderBy(predictMatch => predictMatch.Date).ToList()
         };
 
         return View(viewModel);
@@ -97,6 +100,7 @@ public class PredictController : Controller
             Match = new MatchViewModel
             {
                 MatchId = match.MatchId,
+                Round = match.Round,
                 MatchInfo = match.Round switch
                 {
                     4 => "Oitavas de final",
@@ -109,12 +113,14 @@ public class PredictController : Controller
                 Date = match.Date,
                 HomeTeam = new TeamViewModel
                 {
+                    Id = match.HomeTeam.Id,
                     Name = match.HomeTeam.Name,
                     Code = match.HomeTeam.Code,
                     Flag = $"{match.HomeTeam.Code}.webp",
                 },
                 AwayTeam = new TeamViewModel
                 {
+                    Id = match.AwayTeam.Id,
                     Name = match.AwayTeam.Name,
                     Code = match.AwayTeam.Code,
                     Flag = $"{match.AwayTeam.Code}.webp",

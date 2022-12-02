@@ -18,6 +18,7 @@ builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireCo
 
 builder.Services.AddScoped<PredictionService>();
 builder.Services.AddScoped<MatchService>();
+builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<PointsService>();
 builder.Services.AddScoped<ResultPointsService>();
 

@@ -3,8 +3,9 @@
 public sealed class PredictListDTO
 {
     public Guid MatchId { get; set; }
+    public byte Round { get; set; }
     public string MatchInfo { get; set; }
     public DateTime Date { get; set; }
-    public TeamInfoDTO HomeTeam { get; set; }
-    public TeamInfoDTO AwayTeam { get; set; }
+    public TeamDTO HomeTeam { get; set; }
+    public TeamDTO AwayTeam { get; set; }
 }

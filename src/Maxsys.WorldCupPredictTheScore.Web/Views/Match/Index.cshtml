@@ -1,4 +1,5 @@
-﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Match;
+﻿@using Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
+@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Match;
 @using System.Security.Claims
 @model IEnumerable<MatchViewModel>
 
@@ -23,11 +24,19 @@
     {
         var dateISO = item.Date.GetBRT().ToString("yyyy-MM-dd HH:mm:ss");
         var date = item.Date.ToStringBRT();
+        var bgColor = item.Round switch
+        {
+            4 => "bg-oitavas",
+            5 => "bg-quartas",
+            6 => "bg-semis",
+            7 or 8 => "bg-finais",
+            _ => "bg-azure"
+        };
 
         <a id="@item.MatchId.ToString().Replace("-", "")"></a>
         <section class="d-flex justify-content-center">
-            <div class="col-12 score-content">
-                <div class="container text-muted text-center score-text ">
+            <div class="col-12 score-content @Html.Raw(bgColor)">
+                <div class="container text-muted text-center score-text">
                     <small><strong><time datetime="@dateISO">@date</time></strong> | @item.MatchInfo</small>
                 </div>
                 <hr class="mt-1" />

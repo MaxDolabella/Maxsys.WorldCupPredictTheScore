@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
+using Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
 using Maxsys.WorldCupPredictTheScore.Web.Data;
-using Maxsys.WorldCupPredictTheScore.Web.Extensions;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +54,7 @@ public sealed class PredictionService
             .Select(m => new PredictListDTO
             {
                 MatchId = m.MatchId,
+                Round = m.Round,
                 MatchInfo = m.Round switch
                 {
                     4 => "Oitavas de final",
