@@ -6,6 +6,15 @@
     ViewData["Title"] = "Palpites do jogo";
     var previousMatchDisabled = Model.PreviousMatchId is null ? "disabled" : string.Empty;
     var nextMatchDisabled = Model.NextMatchId is null ? "disabled" : string.Empty;
+    var bgColor = Model.Match.Round switch
+    {
+        4 => "bg-oitavas",
+        5 => "bg-quartas",
+        6 => "bg-semis",
+        7 or 8 => "bg-finais",
+        _ => "bg-azure"
+    };
+
 }
 
 <h4 class="text-center">@ViewData["Title"]</h4>
@@ -20,7 +29,7 @@
     }
 
     <section class="d-flex justify-content-center">
-        <div class="col-12 score-content">
+        <div class="col-12 score-content @Html.Raw(bgColor) ">
             <div class="container text-muted text-center score-text ">
                 <small><strong><time datetime="@dateISO">@date</time></strong> | @Model.Match.MatchInfo</small>
                 <br/>
