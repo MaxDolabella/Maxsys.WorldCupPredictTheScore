@@ -13,6 +13,7 @@
 
   
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
@@ -26,6 +27,10 @@
 	<ItemGroup>
 		<Using Remove="System.ComponentModel.DataAnnotations" />
 		<Using Remove="System.IO" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Core\Mappers\" />
 	</ItemGroup>
 
 
