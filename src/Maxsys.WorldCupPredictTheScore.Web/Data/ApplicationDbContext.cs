@@ -10,6 +10,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, Guid>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
+        ChangeTracker.LazyLoadingEnabled = false;
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTrackingWithIdentityResolution;
     }
 
     public DbSet<Team> Teams { get; set; }
