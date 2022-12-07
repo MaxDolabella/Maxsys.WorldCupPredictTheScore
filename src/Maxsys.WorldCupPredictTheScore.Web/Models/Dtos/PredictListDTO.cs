@@ -9,3 +9,24 @@ public sealed class PredictListDTO
     public TeamDTO HomeTeam { get; set; }
     public TeamDTO AwayTeam { get; set; }
 }
+
+/// <summary>
+/// Contém Match
+/// </summary>
+public sealed class PredictedDTO
+{
+    public MatchDTO Match { get; set; }
+    public UserDTO User { get; set; }
+    public byte HomeTeamScore { get; set; }
+    public byte AwayTeamScore { get; set; }
+}
+
+/// <summary>
+/// Detail para match
+/// </summary>
+public sealed class MatchPredictionsItemDTO
+{
+    public UserDTO User { get; set; }
+    public byte HomeTeamScore { get; set; }
+    public byte AwayTeamScore { get; set; }
+}

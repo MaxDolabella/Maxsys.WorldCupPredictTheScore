@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-
-namespace Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
+﻿namespace FluentValidation.Results;
 
 public static class ValidationResultExtensions
 {

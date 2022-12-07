@@ -1,10 +1,32 @@
-﻿using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
+﻿using System.Linq.Expressions;
+using Maxsys.WorldCupPredictTheScore.Web.Data;
+using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
 
 public static class IQueryableExtensions
 {
+    /// <summary>
+    /// Atalho para query.GroupJoin(...).SelectMany(...)
+    /// </summary>
+    /// <returns></returns>
+    public static IQueryable<TResult> LeftOuterJoin<TSource, TInner, TKey, TJoinResult, TResult>(
+        this IQueryable<TSource> outer,
+        IQueryable<TInner> inner,
+        Expression<Func<TSource, TKey>> outerKeySelector,
+        Expression<Func<TInner, TKey>> innerKeySelector,
+        Expression<Func<TSource, IEnumerable<TInner>, TJoinResult>> joinResultSelector,
+        Expression<Func<TJoinResult, IEnumerable<TInner?>>> collectionSelector,
+        Expression<Func<TJoinResult, TInner?, TResult>> resultSelector)
+    {
+        var query = outer
+            .GroupJoin(inner, outerKeySelector, innerKeySelector, joinResultSelector)
+            .SelectMany(collectionSelector, resultSelector);
+
+        return query;
+    }
+
     public static IQueryable<MatchDTO> SelectMatch(this IQueryable<Match> query)
     {
         return query.Select(m => new MatchDTO
@@ -39,4 +61,29 @@ public static class IQueryableExtensions
             Code = m.Code
         });
     }
+
+    public static IQueryable<MatchPredictionsItemDTO> SelectPredict(this IQueryable<PredictScore> query, ApplicationDbContext context)
+    {
+        return query
+            .Select(predicted => new MatchPredictionsItemDTO
+            {
+                User = new UserDTO
+                {   
+                    Id = predicted.UserId,
+                    Email = predicted.User.Email,
+                    Name = predicted.User.Email.Substring(0, predicted.User.Email.IndexOf('@')),
+                    //Roles = context.Roles
+                    //    .Where(r => context.UserRoles
+                    //        .Where(ur => ur.UserId == predicted.UserId)
+                    //        .Select(ur => ur.RoleId)
+                    //        .Contains(r.Id))
+                    //    .Select(role => role.Name)
+                    //    .AsEnumerable()
+                },
+                HomeTeamScore = predicted.HomeTeamScore,
+                AwayTeamScore = predicted.AwayTeamScore
+            });
+    }
+
+    
 }

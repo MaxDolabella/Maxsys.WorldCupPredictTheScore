@@ -29,9 +29,5 @@
 		<Using Remove="System.IO" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Core\Mappers\" />
-	</ItemGroup>
-
 
 </Project>

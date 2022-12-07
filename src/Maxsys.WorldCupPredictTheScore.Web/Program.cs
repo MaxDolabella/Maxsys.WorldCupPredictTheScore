@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.ConfigureIdentity();
+builder.Services.AddRepositories();
 builder.Services.AddServices();
 builder.Services.AddMapper();
 

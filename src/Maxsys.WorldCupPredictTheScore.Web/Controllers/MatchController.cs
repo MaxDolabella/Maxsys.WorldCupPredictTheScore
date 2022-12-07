@@ -1,4 +1,5 @@
-﻿using FluentValidation.AspNetCore;
+﻿using AutoMapper;
+using FluentValidation.AspNetCore;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
 using Maxsys.WorldCupPredictTheScore.Web.Services;
 using Maxsys.WorldCupPredictTheScore.Web.ViewModels;
@@ -12,14 +13,14 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 [Route("jogos")]
 public class MatchController : Controller
 {
-    private readonly ILogger _logger;
+    private readonly IMapper _mapper;
     private readonly MatchService _matchService;
     private readonly TeamService _teamService;
     private readonly PointsService _pointsService;
 
-    public MatchController(ILogger<MatchController> logger, MatchService matchService, TeamService teamService, PointsService pointsService)
+    public MatchController(IMapper mapper, MatchService matchService, TeamService teamService, PointsService pointsService)
     {
-        _logger = logger;
+        _mapper = mapper;
         _matchService = matchService;
         _teamService = teamService;
         _pointsService = pointsService;
@@ -29,42 +30,8 @@ public class MatchController : Controller
     {
         var models = await _matchService.GetAllMatchesAsync(cancellation);
 
-        var viewModels = models
-            .Select(match => new MatchViewModel
-            {
-                MatchId = match.MatchId,
-                Round = match.Round,
-                MatchInfo = match.Round switch
-                {
-                    4 => "Oitavas de final",
-                    5 => "Quartas de final",
-                    6 => "Semifinal",
-                    7 => "Decisão de 3º Lugar",
-                    8 => "FINAL",
-                    _ => $"Rodada {match.Round} / Grupo {match.Group}"
-                },
-                Date = match.Date,
-                HomeTeam = new TeamViewModel
-                {
-                    Id = match.HomeTeam.Id,
-                    Name = match.HomeTeam.Name,
-                    Code = match.HomeTeam.Code,
-                    Flag = $"{match.HomeTeam.Code}.webp",
-                },
-                AwayTeam = new TeamViewModel
-                {
-                    Id = match.AwayTeam.Id,
-                    Name = match.AwayTeam.Name,
-                    Code = match.AwayTeam.Code,
-                    Flag = $"{match.AwayTeam.Code}.webp",
-                },
-                HomeTeamScore = match.HomeTeamScore,
-                AwayTeamScore = match.AwayTeamScore,
-                //IsPlayed = (match.HomeTeamScore, match.AwayTeamScore) is not (null, null)
-            })
-            .ToList();
-
-        return View(viewModels);
+        var viewModels = _mapper.Map<IEnumerable<MatchViewModel>>(models);
+        return View(viewModels.ToList());
     }
 
     [Authorize(Roles = "admin")]
@@ -72,20 +39,10 @@ public class MatchController : Controller
     public async Task<IActionResult> Edit(Guid matchId, CancellationToken cancellation = default)
     {
         var model = await _matchService.GetMatchAsync(matchId, cancellation);
-
         if (model is null)
             return NotFound();
 
-        var viewModel = new MatchEditViewModel
-        {
-            MatchId = model.MatchId,
-            HomeTeamName = model.HomeTeam.Name,
-            AwayTeamName = model.AwayTeam.Name,
-            HomeTeamScore = model.HomeTeamScore,
-            AwayTeamScore = model.AwayTeamScore
-        };
-
-        return View(viewModel);
+        return View(_mapper.Map<MatchEditViewModel>(model));
     }
 
     [HttpPost]
@@ -93,12 +50,7 @@ public class MatchController : Controller
     [Route("editar/{matchId:guid}")]
     public async ValueTask<IActionResult> Edit(MatchEditViewModel viewModel, CancellationToken cancellation = default)
     {
-        var model = new MatchEditDTO
-        {
-            MatchId = viewModel.MatchId,
-            HomeTeamScore = viewModel.HomeTeamScore,
-            AwayTeamScore = viewModel.AwayTeamScore
-        };
+        var model = _mapper.Map<MatchEditDTO>(viewModel);
 
         var result = await _matchService.UpdateMatchAsync(model, cancellation);
         if (!result.IsValid)
@@ -110,9 +62,8 @@ public class MatchController : Controller
         // points
         await _pointsService.UpdatePointsAsync(model.MatchId, cancellation);
 
-        return RedirectToAction("Index");
+        return RedirectToAction("Edit", model.MatchId);
     }
-
 
     [HttpGet]
     [Authorize(Roles = "admin")]
@@ -176,5 +127,4 @@ public class MatchController : Controller
             Flag = $"{team.Code}.webp",
         }).ToList();
     }
-    
 }

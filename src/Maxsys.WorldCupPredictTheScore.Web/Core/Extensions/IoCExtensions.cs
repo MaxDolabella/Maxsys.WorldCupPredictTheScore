@@ -1,4 +1,5 @@
 ﻿using Maxsys.WorldCupPredictTheScore.Web.Areas.Identity.Models;
+using Maxsys.WorldCupPredictTheScore.Web.Core.Repositories;
 using Maxsys.WorldCupPredictTheScore.Web.Data;
 using Maxsys.WorldCupPredictTheScore.Web.Services;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,19 @@ public static class IoCExtensions
         services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<AppRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Método de extensão adiciona os services
+    /// </summary>
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<MatchRepository>();
+        services.AddScoped<TeamRepository>();
+        services.AddScoped<PredictResultRepository>();
+        services.AddScoped<PredictionRepository>();
 
         return services;
     }
