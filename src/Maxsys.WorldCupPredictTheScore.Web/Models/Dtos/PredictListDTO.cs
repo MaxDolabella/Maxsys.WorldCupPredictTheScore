@@ -13,19 +13,9 @@ public sealed class PredictListDTO
 /// <summary>
 /// Contém Match
 /// </summary>
-public sealed class PredictedDTO
+public sealed class PredictedMatchDTO
 {
     public MatchDTO Match { get; set; }
-    public UserDTO User { get; set; }
-    public byte HomeTeamScore { get; set; }
-    public byte AwayTeamScore { get; set; }
-}
-
-/// <summary>
-/// Detail para match
-/// </summary>
-public sealed class MatchPredictionsItemDTO
-{
     public UserDTO User { get; set; }
     public byte HomeTeamScore { get; set; }
     public byte AwayTeamScore { get; set; }

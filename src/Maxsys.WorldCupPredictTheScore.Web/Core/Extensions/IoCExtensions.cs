@@ -48,7 +48,7 @@ public static class IoCExtensions
     {
         services.AddScoped<MatchRepository>();
         services.AddScoped<TeamRepository>();
-        services.AddScoped<PredictResultRepository>();
+        services.AddScoped<PredictionResultRepository>();
         services.AddScoped<PredictionRepository>();
 
         return services;
@@ -64,6 +64,7 @@ public static class IoCExtensions
         services.AddScoped<TeamService>();
         services.AddScoped<PointsService>();
         services.AddScoped<ResultPointsService>();
+        services.AddScoped<ClassificationService>();
 
         return services;
     }

@@ -12,14 +12,14 @@ namespace Maxsys.WorldCupPredictTheScore.Web.Controllers;
 
 [Authorize(Roles = "admin,user")]
 [Route("palpites")]
-public class PredictController : BaseController
+public class PredictionController : BaseController
 {
     private readonly IMapper _mapper;
     private readonly PredictionService _predictService;
     private readonly ResultPointsService _resultPointsService;
     private readonly UserManager<AppUser> _userManager;
 
-    public PredictController(PredictionService predictService, ResultPointsService resultPointsService, UserManager<AppUser> userManager, IMapper mapper)
+    public PredictionController(PredictionService predictService, ResultPointsService resultPointsService, UserManager<AppUser> userManager, IMapper mapper)
     {
         _predictService = predictService;
         _userManager = userManager;
@@ -51,10 +51,17 @@ public class PredictController : BaseController
     public async Task<IActionResult> MatchPredictions(Guid matchId, CancellationToken cancellation = default)
     {
         var loggerUser = LoggedUser;
-        if (loggerUser is null)
-            throw new ApplicationException("Falha ao ler usuário logado.");
-
+        
         var viewModel = await _predictService.MatchPredictionsAsync(matchId, loggerUser.Id, cancellation);
+
+        return viewModel is not null ? View(viewModel) : NotFound();
+    }
+    
+    [HttpGet]
+    [Route("usuario/{userId:guid}")]
+    public async Task<IActionResult> UserPredictions(Guid userId, CancellationToken cancellation = default)
+    {
+        var viewModel = await _predictService.UserPredictionsAsync(userId, cancellation);
 
         return viewModel is not null ? View(viewModel) : NotFound();
     }

@@ -1,0 +1,90 @@
+﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Classification;
+@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Results
+
+@model ClassificationViewModel
+
+@{
+    ViewData["Title"] = "Classificação";
+}
+
+<h4 class="text-center">Ranking Geral</h4>
+
+<table class="table table-responsive table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Participante</th>
+            <th>Total Pontos</th>
+            <th><dfn title="Diferença de pontos para o líder">Dif.</dfn></th>
+            <th><dfn title="Vezes que o competidor acertou o placar em cheio.">Acertos</dfn> /
+                <dfn title="Vezes que o competidor errou o placar e o vencedor.">Erros</dfn></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.FreeItems) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Rank)º</td>
+            @if(Model.LoggedUserId == item.UserId) {
+                <td><strong>@Html.DisplayFor(modelItem => item.UserName)</strong></td>
+            }
+            else {
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+            }
+            <td>@Html.DisplayFor(modelItem => item.Points)</td>
+            <td>@Html.DisplayFor(modelItem => item.LeaderDifference)</td>
+            <td>@Html.DisplayFor(modelItem => item.Points25)/@Html.DisplayFor(modelItem => item.Points4)</td>
+            <td>
+                    <a class="btn btn-sm btn-primary" asp-controller="Prediction" asp-action="UserPredictions" asp-route-userId="@item.UserId">Palpites</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+<br />
+<br />
+<hr/>
+
+
+<h4 class="text-center">Ranking dos Profissionais (pago)</h4>
+
+<table class="table table-responsive table-success table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Participante</th>
+            <th>Total Pontos</th>
+            <th><dfn title="Diferença de pontos para o líder">Dif.</dfn></th>
+            <th>
+                <dfn title="Vezes que o competidor acertou o placar em cheio.">Acertos</dfn> /
+                <dfn title="Vezes que o competidor errou o placar e o vencedor.">Erros</dfn>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PayableItems)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Rank)º</td>
+                @if (Model.LoggedUserId == item.UserId)
+                {
+                    <td><strong>@Html.DisplayFor(modelItem => item.UserName)</strong></td>
+                }
+                else
+                {
+                    <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                }
+                <td>@Html.DisplayFor(modelItem => item.Points)</td>
+                <td>@Html.DisplayFor(modelItem => item.LeaderDifference)</td>
+                <td>@Html.DisplayFor(modelItem => item.Points25)/@Html.DisplayFor(modelItem => item.Points4)</td>
+                <td>
+                    @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ })*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

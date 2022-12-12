@@ -56,3 +56,4 @@ await Seeder.SeedRoles(app, addTestUsers:false);
 app.Run();
 
 // TODO Implementing the Secure Account Activation https://coding.abel.nu/2015/05/secure-account-activation-with-asp-net-identity/
+// TODO Para próxima versão, PredictionScore (PredictScore) e PredictionResult podem ser unificados. Basta colocar a prop Points nulável em PredictionScore.

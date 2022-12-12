@@ -10,7 +10,7 @@ public class MatchProfile : Profile
     public MatchProfile()
     {
         // ============================= DTO to VM =============================
-        CreateMap<PreviousNextMatchDTO, MatchPredictionsViewModel>()
+        CreateMap<PreviousNextMatchDTO, MatchPredictionsViewModel_old>()
             .ForMember(d => d.PreviousMatchId, cfg => cfg.MapFrom(s => s.PreviousMatchId))
             .ForMember(d => d.NextMatchId, cfg => cfg.MapFrom(s => s.NextMatchId));
 

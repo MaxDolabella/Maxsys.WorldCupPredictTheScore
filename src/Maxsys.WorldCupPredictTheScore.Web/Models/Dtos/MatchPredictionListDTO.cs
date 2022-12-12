@@ -1,6 +1,6 @@
 ﻿namespace Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
 
-public sealed class MatchPredictionsDTO
+public sealed class MatchPredictionsDTO_old
 {
     public MatchDTO Match { get; set; }
     public IReadOnlyList<PredictedScoreDTO> Predictions { get; set; }

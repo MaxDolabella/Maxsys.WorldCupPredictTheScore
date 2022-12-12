@@ -5,8 +5,8 @@ using Maxsys.WorldCupPredictTheScore.Web.Core.Repositories;
 using Maxsys.WorldCupPredictTheScore.Web.Data;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Entities;
-using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Match;
 using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
+using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Prediction;
 using Microsoft.EntityFrameworkCore;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Services;
@@ -17,9 +17,9 @@ public sealed class PredictionService
     private readonly ApplicationDbContext _context;
     private readonly MatchRepository _matchRepository;
     private readonly PredictionRepository _predictionRepository;
-    private readonly PredictResultRepository _resultsRepository;
+    private readonly PredictionResultRepository _resultsRepository;
 
-    public PredictionService(ApplicationDbContext context, PredictionRepository predictionRepository, MatchRepository matchRepository, IMapper mapper, PredictResultRepository resultsRepository)
+    public PredictionService(ApplicationDbContext context, PredictionRepository predictionRepository, MatchRepository matchRepository, IMapper mapper, PredictionResultRepository resultsRepository)
     {
         _context = context;
         _predictionRepository = predictionRepository;
@@ -37,13 +37,12 @@ public sealed class PredictionService
         var now = DateTime.UtcNow;
 
         // Obter id dos jogos palpitados.
-        var predictedMatchIds = await _context.Predictions.AsNoTracking()
-            .Where(predicted => predicted.UserId == userId)
-            .Select(predicted => predicted.MatchId)
-            .ToListAsync(cancellation);
+        var predictedMatchesIds = await _predictionRepository.GetPredictedMatchIdsByUserAsync(userId, cancellation);
 
         var allmatches = await _context.Matches.AsNoTracking()
             .Where(m => m.HomeScore == null && m.AwayScore == null) // jogos ainda não jogados
+            .Where(match => match.Date > now) // jogos não iniciados// jogos não iniciados
+            .Where(match => !predictedMatchesIds.Contains(match.Id)) // Jogos ainda não palpitados
             .OrderBy(m => m.Date)
             .SelectMatch()
             .ToListAsync(cancellation);
@@ -61,10 +60,7 @@ public sealed class PredictionService
         }
 
         var nextMatchesToPredict = nextMatches
-            .Where(match => match.Date > now) // jogos não iniciados
-            .Where(match => !predictedMatchIds.Contains(match.MatchId)) // Jogos ainda não palpitados
             .Select(match => _mapper.Map<PredictListDTO>(match))
-            //.OrderBy(m => m.Date)
             .ToList();
 
         return new PredictViewModel
@@ -114,96 +110,31 @@ public sealed class PredictionService
         };
     }
 
-    public async Task<MatchPredictionsDTO?> GetMatchPredictionsAsync(Guid matchId, CancellationToken cancellation = default)
-    {
-        var match = await _context.Matches.AsNoTracking()
-            .SelectMatch()
-            .FirstOrDefaultAsync(m => m.MatchId == matchId, cancellation);
-
-        // TODO exception aqui.
-        // Por enquanto retorna lista vazia
-        if (match is null)
-            return null;
-
-        var query = _context.Predictions.AsNoTracking()
-            .Where(p => p.MatchId == matchId);
-
-        var predictions = await query
-            .OrderBy(p => p.User.UserName)
-            .Select(p => new PredictedScoreDTO
-            {
-                PredictionId = p.Id,
-                UserId = p.UserId,
-                UserName = p.User.UserName,
-                HomeTeamScore = p.HomeTeamScore,
-                AwayTeamScore = p.AwayTeamScore
-            })
-            .ToListAsync(cancellation);
-
-        return new MatchPredictionsDTO
-        {
-            Match = match,
-            Predictions = predictions
-        };
-    }
-
-    public async Task<MatchPredictionsDTO_new?> GetMatchPredictionsAsync2(Guid matchId, CancellationToken cancellation = default)
-    {
-        var match = await _matchRepository.GetByIdAsync(matchId, cancellation);
-        if (match is null)
-            return null;
-
-        var predictions = await _predictionRepository.GetPredictionsByMatchAsync(matchId, cancellation);
-
-        return new MatchPredictionsDTO_new
-        {
-            Match = match,
-            Predictions = predictions
-        };
-    }
-
     public async Task<MatchPredictionsViewModel?> MatchPredictionsAsync(Guid matchId, Guid loggedUserId, CancellationToken cancellation = default)
     {
-        // Obtém-se o jogo para se listar os palpites
-        var match = await _matchRepository.GetByIdAsync(matchId, cancellation);
-        if (match is null)
+        var matchPredictions = await _predictionRepository.GetMatchPredictionsAsync_new(matchId, cancellation);
+        if (matchPredictions is null)
             return null;
-
-        // Obtém-se os palpites desse jogo
-        var predictions = await _predictionRepository.GetPredictionsByMatchAsync(matchId, cancellation);
 
         // Obtém-se os ids dos jogos imediatamente anterior e posterior
         var previousNextMatch = await GetPreviousNextMatchesAsync(matchId, cancellation);
 
+        var viewModel = _mapper.Map<MatchPredictionsViewModel>(matchPredictions);
+        _mapper.Map(previousNextMatch, viewModel);
+
         // Data do jogo maior que agora = não jogado
-        var notPlayedMatch = match.Date > DateTime.UtcNow;
-
-        var viewModel = new MatchPredictionsViewModel
-        {
-            PreviousMatchId = previousNextMatch?.PreviousMatchId,
-            NextMatchId = previousNextMatch?.NextMatchId,
-            Match = _mapper.Map<MatchViewModel>(match),
-            Predictions = _mapper.Map<IReadOnlyList<PredictedScoreViewModel>>(predictions)
-        };
-
-        // Obter pontos da partida
-        var matchResults = await _resultsRepository.GetMatchResultsAsync(matchId, cancellation);
-
-        // caso tenha pontos (partida em andamento ou finalizada) exibir
-        foreach (var predictionScore in viewModel.Predictions)
-        {
-            // não visualizar palpites de adversários onde a partida não começou
-            if (notPlayedMatch && predictionScore.UserId != loggedUserId)
-            {
-                predictionScore.HomeTeamScore = "?";
-                predictionScore.AwayTeamScore = "?";
-            }
-
-            var resultPoints = matchResults.SingleOrDefault(points => points.UserId == predictionScore.UserId);
-            if (resultPoints is not null)
-                predictionScore.Points = resultPoints.Points;
-        }
+        viewModel.IsNotPlayedMatch = matchPredictions.Match.Date > DateTime.UtcNow;
+        viewModel.LoggedUser = loggedUserId;
 
         return viewModel;
+    }
+
+    public async Task<UserPredictionsViewModel?> UserPredictionsAsync(Guid userId, CancellationToken cancellation = default)
+    {
+        var model = await _resultsRepository.GetUserPredictionsAsync(userId, cancellation);
+
+        return model is not null
+            ? _mapper.Map<UserPredictionsViewModel>(model)
+            : null;
     }
 }

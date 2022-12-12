@@ -1,0 +1,52 @@
+﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
+@using Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
+@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Prediction;
+@model UserPredictionsViewModel
+
+@{
+    ViewData["Title"] = $"Palpites de {Model.User.Name}";
+}
+
+<h4 class="text-center">@ViewData["Title"]</h4>
+
+<section class="container">
+    <div class="row justify-content-center">
+        <div class="col col-auto">
+
+            <table class="table table-responsive table-striped text-center ">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Resultado</th>
+                        <th>Palpite</th>
+                        <th>Pontos</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        var textColor = item.Points == 25 ? "bg-success" : item.Points == 4 ? "bg-secondary text-warning" : "bg-secondary";
+                        <tr>
+                            <td>
+                                <strong class="score-text">
+                                    <dfn title="@item.Match.HomeTeam.Name">@item.Match.HomeTeam.Code</dfn>
+                                    @item.Match.HomeTeamScore
+                                </strong>
+                                <span class="text-muted">X</span>
+                                <strong class="score-text">
+                                    @item.Match.AwayTeamScore
+                                    <dfn title="@item.Match.AwayTeam.Name">@item.Match.AwayTeam.Code</dfn>
+                                </strong>
+                            </td>
+                            <td class="text-center score-text small">
+                                @item.HomeTeamScore <span class="text-muted">X</span> @item.AwayTeamScore
+                            </td>
+                            <td><span class="badge @textColor">@item.Points Pontos</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>

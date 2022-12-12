@@ -1,9 +1,10 @@
 ﻿@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
 @using Maxsys.WorldCupPredictTheScore.Web.Core.Extensions;
+@using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Prediction;
 @model MatchPredictionsViewModel
 
 @{
-    ViewData["Title"] = "Palpites do jogo";
+    ViewData["Title"] = $"Palpites {Model.Match.HomeTeam.Code} x {Model.Match.AwayTeam.Code}";
     var previousMatchDisabled = Model.PreviousMatchId is null ? "disabled" : string.Empty;
     var nextMatchDisabled = Model.NextMatchId is null ? "disabled" : string.Empty;
     var bgColor = Model.Match.Round switch
@@ -14,7 +15,6 @@
         7 or 8 => "bg-finais",
         _ => "bg-azure"
     };
-
 }
 
 <h4 class="text-center">@ViewData["Title"]</h4>
@@ -52,17 +52,21 @@
                 <div class="col text-start score-text score-team-code"><strong>@Model.Match.AwayTeam.Code</strong></div>
             </div>
 
-            @if (Model.Predictions.Any()) 
+            @if (Model.Items.Any()) 
             {
-                @foreach (var item in Model.Predictions)
+                @foreach (var item in Model.Items)
                 {
+                    var canShow = !(Model.IsNotPlayedMatch && Model.LoggedUser != item.User.Id);
+                    var homeTeamScore = canShow ? item.HomeTeamScore.ToString() : "?";
+                    var awayTeamScore = canShow ? item.AwayTeamScore.ToString() : "?";
+
                     <hr class="mt-1" />
                     <div class="row container justify-content-center" style="position: relative;">
                         <div class="col col-auto text-center">
-                            <strong>@item.UserName</strong><br />
-                            <span class="text-center score-text"><strong>@item.HomeTeamScore</strong></span>
+                            <strong>@item.User.Name</strong><br />
+                            <span class="text-center score-text"><strong>@homeTeamScore</strong></span>
                             <span class="text-muted">X</span>
-                            <span class="text-center score-text"><strong>@item.AwayTeamScore</strong></span>
+                            <span class="text-center score-text"><strong>@awayTeamScore</strong></span>
                         </div>
                         <!-- div row: style="position: relative;"  -->
                         @if (item.Points is not null)

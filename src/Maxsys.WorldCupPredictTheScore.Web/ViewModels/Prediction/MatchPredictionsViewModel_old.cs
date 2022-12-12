@@ -2,15 +2,15 @@
 
 namespace Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
 
-public sealed class MatchPredictionsViewModel
+public sealed class MatchPredictionsViewModel_old
 {
     public MatchViewModel Match { get; set; }
     public Guid? PreviousMatchId { get; set; }
     public Guid? NextMatchId { get; set; }
-    public IReadOnlyList<PredictedScoreViewModel> Predictions { get; set; }
+    public IReadOnlyList<PredictedScoreViewModelOld> Predictions { get; set; }
 }
 
-public sealed class PredictedScoreViewModel
+public sealed class PredictedScoreViewModelOld
 {
     public Guid UserId { get; set; }
     public string UserName { get; set; }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Maxsys.WorldCupPredictTheScore.Web.Models.Dtos;
 using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Predict;
+using Maxsys.WorldCupPredictTheScore.Web.ViewModels.Prediction;
 
 namespace Maxsys.WorldCupPredictTheScore.Web.Core.Mappers;
 
@@ -8,7 +9,7 @@ public class PredictionProfile : Profile
 {
     public PredictionProfile()
     {
-        CreateMap<MatchPredictionsItemDTO, PredictedScoreViewModel>()
+        CreateMap<MatchPredictionsItemDTO, PredictedScoreViewModelOld>()
             .ForMember(d => d.UserId, cfg => cfg.MapFrom(s => s.User.Id))
             .ForMember(d => d.UserName, cfg => cfg.MapFrom(s => s.User.Name))
             .ForMember(d => d.HomeTeamScore, cfg => cfg.MapFrom(s => s.HomeTeamScore.ToString()))
@@ -33,6 +34,16 @@ public class PredictionProfile : Profile
             .ForMember(d => d.HomeTeamScore, cfg => cfg.MapFrom(s => default(byte?)))
             .ForMember(d => d.AwayTeamScore, cfg => cfg.MapFrom(s => default(byte?)));
 
-        }
+        CreateMap<UserPredictionsItemDTO, UserPredictionsItemViewModel>();
+        CreateMap<UserPredictionsDTO, UserPredictionsViewModel>();
 
+        CreateMap<MatchPredictionsItemDTO, MatchPredictionsItemViewModel>();
+        CreateMap<MatchPredictionsDTO, MatchPredictionsViewModel>()
+            .ForMember(d => d.PreviousMatchId, cfg => cfg.MapFrom(s => default(Guid?)))
+            .ForMember(d => d.NextMatchId, cfg => cfg.MapFrom(s => default(Guid?)));
+
+        CreateMap<PreviousNextMatchDTO, MatchPredictionsViewModel>()
+            .ForMember(d => d.PreviousMatchId, cfg => cfg.MapFrom(s => s.PreviousMatchId ))
+            .ForMember(d => d.NextMatchId, cfg => cfg.MapFrom(s => s.NextMatchId));
+    }
 }
