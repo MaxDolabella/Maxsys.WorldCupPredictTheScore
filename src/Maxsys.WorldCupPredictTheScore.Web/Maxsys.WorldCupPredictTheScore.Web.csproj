@@ -30,5 +30,9 @@
 		<Using Remove="System.IO" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Properties\PublishProfiles\" />
+	</ItemGroup>
+
 
 </Project>

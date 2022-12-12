@@ -8,10 +8,10 @@ public class HomeController : Controller
 {
     public IActionResult Index()
     {
-        return View();
+        return RedirectToAction("Index", "Classification");
     }
 
-    public IActionResult Privacy()
+    public IActionResult Rules()
     {
         return View();
     }
